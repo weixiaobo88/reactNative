@@ -4,45 +4,93 @@
  * @flow
  */
 
-import React, {Component} from 'react';
+import React, {
+	Component
+}
+from 'react';
 import {
-  AppRegistry,
-  StyleSheet,
-  Text,
-  View,
-  StatusBar,
-  ListView,
-} from 'react-native';
+	AppRegistry,
+	StyleSheet,
+	Text,
+	View,
+	StatusBar,
+	ListView,
+}
+from 'react-native';
 import NavBar from './components/NavBar';
 import UserCard from './components/UserCard';
 
-export default class App extends Component {
-  constructor() {
-    super();
-    this.dataSource = new ListView.DataSource({
-      rowHasChanged: (r1, r2)=>r1 !== r2
-    });
-    StatusBar.setBarStyle('light-content');
+var REQUEST_URL = 'http://some.site/api/users';
+
+export
+default class App extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+      dataSource: new ListView.DataSource({
+        rowHasChanged: (row1, row2) => row1 !== row2
+      }),
+      loaded: false
+		};
+		StatusBar.setBarStyle('light-content');
+	}
+
+	componentDidMount() {
+		this._fetchData();
+	}
+
+	_fetchData() {
+    fetch(REQUEST_URL, {
+      headers: {
+        'Cookie': 'token='
+      }
+    })
+      .then((response) => response.json())
+      .then((responseData) => {
+        this.setState({
+          dataSource: this.state.dataSource.cloneWithRows(responseData.users),
+          loaded: true
+        });
+      })
+      .done();
+	}
+
+  _renderLoadingView() {
+    return (
+      <View style={styles.container}>
+        <Text>
+          Loading users....
+        </Text>
+      </View>
+    )
   }
 
-  render() {
-    const ds = this.dataSource.cloneWithRows([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+  _renderUser(user) {
+    return (
+      <UserCard user={user}/>
+    );
+  }
+
+	render() {
+    if(!this.state.dataSource) {
+        return this._renderLoadingView();
+    }
 
     return (
       <View style={styles.container}>
         <NavBar />
         <ListView
-          dataSource={ds}
-          renderRow={()=><UserCard />}
+          dataSource={this.state.dataSource}
+          renderRow={this._renderUser}
         />
       </View>
     );
-  }
+	}
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#EEEEEE',
-  },
+	container: {
+		flex: 1,
+		backgroundColor: '#EEEEEE'
+	}
 });

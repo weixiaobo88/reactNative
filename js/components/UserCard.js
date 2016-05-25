@@ -14,35 +14,45 @@ import {
 
 export default class UserCard extends Component {
   render() {
+    const {name, avatar, email, title, project, office} = this.props.user;
+
     return (
-      <View style={[style.card, style.shadow]}>
+      <View style={[styles.card, styles.shadow]}>
         <Image
-          style={style.avatar}
-          source={ {uri: 'https://pbs.twimg.com/profile_images/565169119884881921/iTCTERmI.png'} }
-          />
-        <View style={style.textWrapper}>
-          <Text style={style.name}>方志刚</Text>
-          <Text style={style.job}>Dev on SWA</Text>
-          <Text style={style.email}>zgfang@thoughtworks.com</Text>
+          style={styles.avatar}
+          source={ {uri: avatar} }
+        />
+        <View style={styles.textWrapper}>
+          <Text style={styles.name}>{name}</Text>
+          <Text style={styles.office}>{office}</Text>
+          <Text style={styles.job}>{`${title} in ${project}`}</Text>
+          <Text style={styles.email}>{email}</Text>
         </View>
       </View>
     )
   }
 }
 
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
   name: {
     fontSize: 18,
     color: '#333333',
-    fontWeight: 'bold',
+    fontWeight: 'bold'
+  },
+  office: {
+    fontSize: 14,
+    color: '#ffffff',
+    backgroundColor: '#F50057',
+    padding: 5,
+    alignSelf: 'flex-start'
   },
   job: {
     fontSize: 14,
-    color: '#666666',
+    color: '#666666'
   },
   email: {
     fontSize: 12,
-    color: '#999999',
+    color: '#999999'
   },
   card: {
     backgroundColor: 'white',
@@ -52,17 +62,17 @@ const style = StyleSheet.create({
     borderRadius: 3,
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 15,
+    padding: 15
   },
   textWrapper: {
     flex: 1,
     alignSelf: 'stretch',
     marginLeft: 20,
-    justifyContent: 'space-between',
+    justifyContent: 'space-between'
   },
   avatar: {
     width: 73,
-    height: 73,
+    height: 73
   },
   shadow: {
     shadowColor: 'black',
@@ -70,8 +80,8 @@ const style = StyleSheet.create({
     shadowRadius: 2,
     shadowOffset: {
       width: 0,
-      height: 2,
-    },
+      height: 2
+    }
   }
-})
+});
 
